@@ -9,12 +9,12 @@ public class Main {
     private static final char MATCHING_CHAR = 'o';
 
     public static void main(String[] args) throws Exception {
-        final String invaderALocation = "/Users/nikoladamjanovic/Downloads/invaderA";
+        final String invaderALocation = args[0];
         MatrixParser parser = new MatrixParser(invaderALocation);
         char[][] invaderA = parser.getFilledMatrix();
         //printMatrix(invaderA);
 
-        final String inputLocation = "/Users/nikoladamjanovic/Downloads/inputMatrix";
+        final String inputLocation = args[1];
         MatrixParser parserA = new MatrixParser(inputLocation);
         char[][] searchMatrix = parserA.getFilledMatrix();
         //printMatrix(searchMatrix);
@@ -36,7 +36,7 @@ public class Main {
                         char invaderMatrixChar = invaderA[k][p];
                         char searchMatrixChar = searchMatrix[i + k][j + p];
 
-                        if ((searchMatrixChar == MATCHING_CHAR) && (invaderMatrixChar == MATCHING_CHAR)){
+                        if (searchMatrixChar == MATCHING_CHAR && invaderMatrixChar == MATCHING_CHAR){
                             exactMatches.add(searchMatrixChar);
                             totalInvaders++;
                         }else if (searchMatrixChar == MATCHING_CHAR) {
