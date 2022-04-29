@@ -6,24 +6,12 @@ public class Matrix  {
 
     private int mColumns;
 
-    private char[][] mMatrix;
+    private final char[][] mMatrix;
 
-    public Matrix(int x, int y){
-        mMatrix = new char[x][y];
-        mRows = x;
-        mColumns = y;
-    }
-
-    public void fillMatrix(String[] inputString) {
-        int k = 0;
-        for (int i = 0; i < mRows; i++) {
-            for (int j = 0; j < mColumns; j++) {
-                if(k == inputString[0].length())
-                    k = 0;
-                mMatrix[i][j] = inputString[i].charAt(k);
-                k++;
-            }
-        }
+    public Matrix(int rows, int columns){
+        mMatrix = new char[rows][columns];
+        mRows = rows;
+        mColumns = columns;
     }
 
     public char[][] getM_matrix(){

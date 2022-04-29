@@ -11,12 +11,11 @@ import java.util.Arrays;
 
 public class MatrixParser {
 
-    private Matrix m_matrix;
     private String fileName;
-    private char[][] m_charArray;
+    private Matrix mMatrix;
     private int rowCount;
     private int columnCount;
-    String[] split;
+    private String[] split;
 
     public MatrixParser(String fileName) throws Exception {
         this.fileName = fileName;
@@ -30,7 +29,7 @@ public class MatrixParser {
         String[] split = data.split("\\n");
         this.rowCount = (int)Arrays.stream(split).count();
         this.columnCount = split[0].length();
-        m_charArray = new char[rowCount][columnCount];
+        mMatrix = new Matrix(rowCount,columnCount);
         return split;
     }
 
@@ -40,20 +39,20 @@ public class MatrixParser {
             for (int j = 0; j < columnCount; j++) {
                 if(k == inputString[0].length())
                     k = 0;
-                m_charArray[i][j] = inputString[i].charAt(k);
+                mMatrix.setElement(i,j,inputString[i].charAt(k));
                 k++;
             }
         }
     }
 
-    public char[][] getFilledMatrix(){
-        return m_charArray;
+    public Matrix getFilledMatrix(){
+        return mMatrix;
     }
 
     public void printMatrix(){
-        for (int i = 0; i < m_charArray.length; i++) {
-            for (int j = 0; j < m_charArray[i].length; j++) {
-                System.out.print(m_charArray[i][j]);
+        for (int i = 0; i < mMatrix.getRows(); i++) {
+            for (int j = 0; j < mMatrix.getColumns(); j++) {
+                System.out.print(mMatrix.getElement(i,j));
             }
             System.out.println(" ");
         }
