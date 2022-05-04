@@ -1,27 +1,44 @@
 package com.company;
 
-public class Matrix  {
-    private int m_rows;
-    private int m_columns;
-    private char[][] m_matrix;
-    public Matrix(int x, int y){
-        m_matrix = new char[x][y];
-        m_rows = x;
-        m_columns = y;
+public class Matrix {
+
+    private int mRows;
+
+    private int mColumns;
+
+    private final char[][] mMatrix;
+
+    public Matrix(int rows, int columns) {
+        mMatrix = new char[rows][columns];
+        mRows = rows;
+        mColumns = columns;
     }
-    public char[][] getM_matrix(){
-        return m_matrix;
+
+    public char[][] getM_matrix() {
+        return mMatrix;
     }
-    public int getRows(){
-        return m_rows;
+
+    public int getRows() {
+        return mRows;
     }
-    public int getColumns(){
-        return m_columns;
+
+    public int getColumns() {
+        return mColumns;
     }
-    public void setRows(int value){
-        m_rows = value;
+
+    public void setRows(int value) {
+        mRows = value;
     }
-    public void setColumns(int value){
-        m_columns = value;
+
+    public void setColumns(int value) {
+        mColumns = value;
+    }
+
+    public void setElement(int i, int j, char value) {
+        mMatrix[i][j] = value;
+    }
+
+    public char getElement(int i, int j) {
+        return mMatrix[i][j];
     }
 }
