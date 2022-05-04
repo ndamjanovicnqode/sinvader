@@ -2,23 +2,48 @@ package com.company;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Main {
 
     private static final char MATCHING_CHAR = 'o';
 
     public static void main(String[] args) throws Exception {
+
+        System.out.println("Enter wanted search percentage: ");
+
+        Scanner scanner = new Scanner(System.in);
+        float requiredPercentage = 50.0f;
+
+        while (scanner.hasNext()) {
+            String line = scanner.nextLine();
+
+            if (line.equals("Q") || (line.equals("q"))) {
+                scanner.close();
+                System.err.println("Starting program with default percentage of 50 % ");
+                break;
+            }
+
+            try {
+                requiredPercentage = Float.parseFloat(line);
+                break;
+            } catch (NumberFormatException e) {
+                System.err.println("Please enter a number or Q to exit.");
+            }
+        }
+
         final String invaderALocation = args[0];
         MatrixParser parser = new MatrixParser(invaderALocation);
         Matrix invaderA = parser.getFilledMatrix();
         printMatrix(invaderA);
 
         final String inputLocation = args[1];
+        //final String inputLocation = "/Users/nikoladamjanovic/IdeaProjects/sinvader/matrix_files/invaderTest";
         MatrixParser parserA = new MatrixParser(inputLocation);
         Matrix searchMatrix = parserA.getFilledMatrix();
         printMatrix(searchMatrix);
 
-        processMatrix(invaderA, searchMatrix, 50.0f);
+        processMatrix(invaderA, searchMatrix, requiredPercentage);
     }
 
     private static void processMatrix(Matrix invaderA, Matrix searchMatrix, final float requiredPercentage) {
@@ -31,6 +56,7 @@ public class Main {
                 int exactMatches = 0;
                 int invaderOnly = 0;
                 int searchOnly = 0;
+                Result result;
 
                 for (int k = 0; k < invaderA.getRows(); k++) {
                     for (int p = 0; p < invaderA.getColumns(); p++) {
@@ -49,34 +75,27 @@ public class Main {
                     }
                 }
 
-                System.out.println("invadercount: " + invaderOnly + "exactMatch: " + exactMatches + "Search only: " + searchOnly);
                 final int totalInvaders = invaderOnly + exactMatches;
-                System.out.println(totalInvaders);
                 float percentage = 0;
 
                 if (totalInvaders > 0) {
                     percentage = (exactMatches * 100.0f) / totalInvaders;
-                } else if (percentage >= requiredPercentage) {
-
                 }
-
-                if (percentage > 50.0f) {
-                    System.out.println("SIPAJ");
-                    System.out.println("SIPAJ");
-                    System.out.println("SIPAJ");
-                    System.out.println("SIPAJ");
-                    System.out.println("SIPAJ");
-                    System.out.println("SIPAJ");
-                    System.out.println("SIPAJ");
-                    System.out.println("SIPAJ");
-                    System.out.println("SIPAJ");
-                    System.out.println("PE " + percentage);
+                if (percentage > requiredPercentage) {
+                    int noise = 0;
+                    int junk = 0;
+                    for (int count = 0; count < radarOnlyPoints.stream().count(); count++) {
+                        if (isNoise(invaderA, radarOnlyPoints.get(count).getPointX(), radarOnlyPoints.get(count).getPointY())) {
+                            noise++;
+                        } else {
+                            junk++;
+                        }
+                    }
+                    result = new Result(String.format(" row: [%2d, %2d], column: [%2d, %2d]", i, i + invaderA.getColumns() - 1, j, j + invaderA.getRows() - 1), percentage, i, i + invaderA.getRows() - 1, j, j + invaderA.getColumns() - 1, noise, junk);
+                    System.out.println(result.printResult());
                     break;
                 }
 
-                System.out.println(percentage);
-                for(int count = 0; count < radarOnlyPoints.stream().count();count++)
-                System.out.println("( x: " + radarOnlyPoints.get(count).getPoint().getPointX() + ", y: " + radarOnlyPoints.get(count).getPoint().getPointY() + ")");
             }
         }
     }
@@ -90,68 +109,67 @@ public class Main {
         }
     }
 
-    /*private boolean isNoise(final Matrix invaderMatrix, final int x, final int y) {
+    private static boolean isNoise(final Matrix invaderMatrix, final int x, final int y) {
 
         //Check if point is not located in last row of matrix
         if (x + 1 < invaderMatrix.getRows()) {
             //Check element below
-            if (invaderMatrix.getElement(x + 1,y)== MATCHING_CHAR)
+            if (invaderMatrix.getElement(x + 1, y) == MATCHING_CHAR)
                 return true;
 
             //Check element below right
-            if (y + 1 < invaderMatrix.getColumns() && invaderMatrix.getElements()[x + 1][y + 1] == MATCHING_CHAR)
+            if (y + 1 < invaderMatrix.getColumns() && invaderMatrix.getElement(x + 1, y + 1) == MATCHING_CHAR)
                 return true;
 
             //Check element below left
-            if (y - 1 >= 0 && invaderMatrix.getElements()[x + 1][y - 1] == MATCHING_CHAR)
+            if (y - 1 >= 0 && invaderMatrix.getElement(x + 1, y - 1) == MATCHING_CHAR)
                 return true;
         }
 
         //Check if point is not located in first row of matrix
         if (x - 1 >= 0) {
             //Check element above
-            if (invaderMatrix.getElements()[x - 1][y] == MATCHING_CHAR)
+            if (invaderMatrix.getElement(x - 1, y) == MATCHING_CHAR)
                 return true;
 
             //Check element above right
-            if (y + 1 < invaderMatrix.getColumns() && invaderMatrix.getElements()[x - 1][y + 1] == MATCHING_CHAR)
+            if (y + 1 < invaderMatrix.getColumns() && invaderMatrix.getElement(x - 1, y + 1) == MATCHING_CHAR)
                 return true;
 
             //Check element above left
-            if (y - 1 >= 0 && invaderMatrix.getElements()[x - 1][y - 1] == MATCHING_CHAR)
+            if (y - 1 >= 0 && invaderMatrix.getElement(x - 1, y - 1) == MATCHING_CHAR)
                 return true;
         }
 
         //Check if point is not located in first column of matrix
         if (y - 1 >= 0) {
             //Check element left
-            if (invaderMatrix.getElements()[x][y - 1] == MATCHING_CHAR)
+            if (invaderMatrix.getElement(x, y - 1) == MATCHING_CHAR)
                 return true;
 
             //Check element left bottom
-            if (x + 1 < invaderMatrix.getRows() && invaderMatrix.getElements()[x + 1][y - 1] == MATCHING_CHAR)
+            if (x + 1 < invaderMatrix.getRows() && invaderMatrix.getElement(x + 1, y - 1) == MATCHING_CHAR)
                 return true;
 
             //Check element left top
-            if (x - 1 >= 0 && invaderMatrix.getElements()[x - 1][y - 1] == MATCHING_CHAR)
+            if (x - 1 >= 0 && invaderMatrix.getElement(x - 1, y - 1) == MATCHING_CHAR)
                 return true;
         }
 
         //Check if point is not located in last column of matrix
         if (y + 1 < invaderMatrix.getColumns()) {
             //Check element right
-            if (invaderMatrix.getElements()[x][y + 1] == MATCHING_CHAR)
+            if (invaderMatrix.getElement(x, y + 1) == MATCHING_CHAR)
                 return true;
 
             //Check element right bottom
-            if (x + 1 < invaderMatrix.getRows() && invaderMatrix.getElements()[x + 1][y + 1] == MATCHING_CHAR)
+            if (x + 1 < invaderMatrix.getRows() && invaderMatrix.getElement(x + 1, y + 1) == MATCHING_CHAR)
                 return true;
 
             //Check element right top
-            if (x - 1 >= 0 && invaderMatrix.getElements()[x - 1][y + 1] == MATCHING_CHAR)
-                return true;
+            return x - 1 >= 0 && invaderMatrix.getElement(x - 1, y + 1) == MATCHING_CHAR;
         }
 
         return false;
-    }*/
+    }
 }
